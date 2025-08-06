@@ -36,23 +36,6 @@ All components were manually configured and tested using real-world scenarios.
 - Denial-of-service behavior tested using Slowloris and R.U.D.Y tools
 - All attack attempts verified through logs and dashboard alerts
 
-## Folder Structure
-group28-reverse-proxy/
-├── nginx/
-│ ├── nginx.conf
-│ ├── modsec/
-│ │ └── modsecurity.conf
-│ ├── sites-available/
-│ │ └──default
-├── dashboard/
-│ ├── dashboard.py
-│ ├── logparser.py
-│ ├── anomalydetector.py
-│ └── llm_assistant.py
-├── setup_docs/
-│ └── instructions.md
-├── README.md
-
 
 ## Setup Summary
 
