@@ -39,7 +39,7 @@ All components were manually configured and tested using real-world scenarios.
 
 ## Setup Summary
 
-Refer to `setup_docs/instructions.md` for further details.
+Refer to `setup_docs/instructions.txt` for further details.
 
 
 ## Outcome
