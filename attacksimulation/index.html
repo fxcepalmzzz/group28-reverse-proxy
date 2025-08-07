@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>XYZ Company Attack Demo</title>
+  <style>
+    body { margin: 0; font-family: Arial, sans-serif; background: #f8f8f8; }
+
+    .header {
+      background-color: #222;
+      color: white;
+      text-align: center;
+      padding: 1rem;
+      font-size: 1.5rem;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+
+    .tabs {
+      background: #444;
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      padding: 0.75rem 0;
+      position: sticky;
+      top: 56px;
+      z-index: 999;
+    }
+
+    .tabs button {
+      background: white;
+      color: black;
+      border: none;
+      padding: 0.5rem 1rem;
+      font-size: 1rem;
+      cursor: pointer;
+      border-radius: 5px;
+    }
+
+    .tabs button.active {
+      background: #f1c40f;
+    }
+
+    .content { display: none; padding: 2rem; }
+    .content.active { display: block; }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .card {
+      background: white;
+      padding: 1rem;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      text-align: center;
+      position: relative;
+    }
+
+    .card img {
+      width: 100%;
+      height: 120px;
+      object-fit: cover;
+      border-radius: 4px;
+      margin-bottom: 0.5rem;
+    }
+
+    .card button {
+      padding: 0.5rem;
+      width: 100%;
+      background: #e74c3c;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .attack-status {
+      margin-top: 10px;
+      background: #ccc;
+      padding: 5px;
+      font-size: 0.9rem;
+      border-radius: 4px;
+      display: none;
+    }
+
+.card {
+  background: #fff;
+  border: 1px solid #ddd;
+  padding: 16px;
+  border-radius: 12px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  transition: 0.2s ease;
+}
+
+
+.attack-btn,
+.info-toggle {
+  margin-top: 10px;
+  padding: 8px 14px;
+  font-size: 14px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  background-color: #007bff;
+  color: white;
+  transition: background 0.3s;
+}
+
+.attack-btn:hover,
+.info-toggle:hover {
+  background-color: #0056b3;
+}
+
+.info-section {
+  margin-top: 10px;
+}
+
+.attack-info {
+  margin-top: 8px;
+  padding: 10px;
+  background: #f9f9f9;
+  border-left: 4px solid #007bff;
+  font-size: 13px;
+  line-height: 1.4;
+  text-align: left;
+  border-radius: 4px;
+}
+
+.modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: white;
+  padding: 2rem;
+  box-shadow: 0 0 10px rgba(0,0,0,0.5);
+  border-radius: 8px;
+  z-index: 9999;
+  max-width: 500px;
+  display: none;
+}
+
+.modal h3 { margin-top: 0; }
+.modal button { margin-top: 1rem; }
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0,0,0,0.5);
+  z-index: 9998;
+  display: none;
+}
+
+  </style>
+</head>
+<body>
+  <div class="header">XYZ Company</div>
+  <div class="tabs">
+    <button class="tab-button active" onclick="showTab('home')">Home</button>
+    <button class="tab-button" onclick="showTab('more')">More Attacks</button>
+  </div>
+
+        <div id="home" class="content active">
+          <div class="grid">
+            <div class="card">
+                <img src="/photos/sqlinjection.png" alt="SQLi" style="max-width: 250px; max-height: 120px; width: auto; height: auto;">
+                <button class="attack-btn" onclick="runAttack(this, 'https://MRProxy.test/?id=1%27+OR+1=1--', 'SQL Injection')">SQL Injection</button>
+
+                <div class="info-section">
+                  <button class="info-toggle" onclick="toggleInfo(this)">Show Info</button>
+                  <div class="attack-info" style="display: none;">
+                    <strong>Payload:</strong><br>
+                    `?id=1' OR 1=1--`<br><br>
+                    <strong>Description:</strong><br>
+                    Bypasses login or fetches all records by manipulating SQL queries.
+                  </div>
+                </div>
+
+        <div class="attack-status">Attack has been run</div>
+      </div>
+      
+      <div class="card">
+        <img src="/photos/maliciousbot.png "alt="Malicious Bot" style="max-width: 250px; max-height: 120px; width: auto; height: auto;">
+        <button class="attack-btn" onclick="runAttack(this, 'https://MRProxy.test/', 'Malicious Bot', 'evilbot')">
+          Malicious Bot
+        </button>
+
+        <div class="info-section">
+          <button class="info-toggle" onclick="toggleInfo(this)">Show Info</button>
+          <div class="attack-info" style="display: none;">
+            <strong>User-Agent:</strong><br>
+            `evilbot`<br><br>
+            <strong>Description:</strong><br>
+            Sends a GET request using a suspicious User-Agent string (`evilbot`) to test bot detection logic.
+          </div>
+        </div>
+
+        <div class="attack-status">Attack has been run</div>
+      </div>
+
+      
+      <div class="card">
+        <img src="/photos/forbidden.png "alt="Sensitive Path" style="max-width: 250px; max-height: 120px; width: auto; height: auto;">
+        <button class="attack-btn" onclick="runAttack(this, 'https://MRProxy.test/admin', 'Sensitive Path Access')">Sensitive Path</button>
+
+        <div class="info-section">
+          <button class="info-toggle" onclick="toggleInfo(this)">Show Info</button>
+          <div class="attack-info" style="display: none;">
+            <strong>Path Accessed:</strong><br>
+            `/admin`<br><br>
+            <strong>Description:</strong><br>
+            Tests if admin or sensitive endpoints are publicly accessible.
+          </div>
+        </div>
+
+        <div class="attack-status">Attack has been run</div>
+      </div>
+
+        <div class="card">
+          <img src="/photos/codeinjection.png" alt="Code Injection" style="max-width: 250px; max-height: 120px; width: auto; height: auto;">
+        <button class="attack-btn" onclick="runAttack(this, 'https://mrproxy.test/ping.php?host=127.0.0.1;id', 'Command Injection')">
+          Code Injection
+          </button>
+
+        <div class="info-section">
+          <button class="info-toggle" onclick="toggleInfo(this)">Show Info</button>
+          <div class="attack-info" style="display: none;">
+            <strong>Attack Vector:</strong><br>
+            `ping.php?host=127.0.0.1;id`<br><br>
+            <strong>Description:</strong><br>
+            Injects executable code into an input parameter to test if the server improperly executes it.
+          </div>
+        </div>
+
+        <div class="attack-status">Attack has been run</div>
+      </div>
+
+      <div class="card">
+        <img src="/photos/bruteforce.png "alt="Brute Force" style="max-width: 250px; max-height: 120px; width: auto; height: auto;">
+        <button class="attack-btn" onclick="runFloodAttack(this, 'https://MRProxy.test/login')">Brute-Force (60x) / Rate Limiting</button>
+
+        <div class="info-section">
+          <button class="info-toggle" onclick="toggleInfo(this)">Show Info</button>
+          <div class="attack-info" style="display: none;">
+            <strong>Method:</strong> POST<br>
+            <strong>Endpoint:</strong> `/login`<br><br>
+            <strong>Description:</strong><br>
+            Repeated login attempts (60x) to simulate a brute-force password attack.
+          </div>
+        </div>
+
+        <div class="attack-status">Attack has been run</div>
+      </div>
+
+      <div class="card">
+        <img src="/photos/forbidden.png "alt="Uncommon HTTP method" style="max-width: 250px; max-height: 120px; width: auto; height: auto;">
+        <button class="attack-btn" onclick="runAttack(this, 'https://MRProxy.test/delete_me', 'Uncommon Method', '', 'DELETE')">Uncommon HTTP Method</button>
+
+        <div class="info-section">
+          <button class="info-toggle" onclick="toggleInfo(this)">Show Info</button>
+          <div class="attack-info" style="display: none;">
+            <strong>Method:</strong> DELETE<br>
+            <strong>Target:</strong> `/delete_me`<br><br>
+            <strong>Description:</strong><br>
+            Sends an uncommon HTTP method to check if the server improperly accepts DELETE requests.
+          </div>
+        </div>
+
+        <div class="attack-status">Attack has been run</div>
+      </div>
+      
+
+        <div class="card">
+          <img src="/photos/maliciousfileupload.png "alt="Malicious Upload" style="max-width: 250px; max-height: 120px; width: auto; height: auto;">
+          <button class="attack-btn" onclick="runAttack(this, 'https://MRProxy.test/upload.php?file=evil.php.jpg', 'Malicious Upload')">
+            Malicious File Upload
+          </button>
+          <div class="info-section">
+            <button class="info-toggle" onclick="toggleInfo(this)">Show Info</button>
+            <div class="attack-info">
+              <strong>Attack Vector:</strong><br>
+              `upload.php?file=evil.php.jpg`<br><br>
+              <strong>Description:</strong><br>
+              Bypasses file upload restrictions to upload a PHP backdoor disguised as an image.
+            </div>
+          </div>
+          <div class="attack-status">Attack has been run</div>
+        </div>
+
+        <div class="card">
+          <img src="/photos/forbidden.png "alt="Path Traversal" style="max-width: 250px; max-height: 120px; width: auto; height: auto;">
+          <button class="attack-btn" onclick="runAttack(this, 'https://MRProxy.test/view.php?file=../../../../etc/passwd', 'Path Traversal')">
+            Path Traversal
+          </button>
+          <div class="info-section">
+            <button class="info-toggle" onclick="toggleInfo(this)">Show Info</button>
+            <div class="attack-info">
+              <strong>Attack Vector:</strong><br>
+              `view.php?file=../../../../etc/passwd`<br><br>
+              <strong>Description:</strong><br>
+              Exploits path traversal to access sensitive files outside the web directory.
+            </div>
+          </div>
+          <div class="attack-status">Attack has been run</div>
+        </div>
+
+        <div class="card">
+          <img src="/photos/xss.png "alt="XSS" style="max-width: 250px; max-height: 120px; width: auto; height: auto;">
+          <button class="attack-btn" onclick="runAttack(this, 'https://MRProxy.test/search.php?q=<script>alert(1)</script>', 'XSS')">
+            XSS
+          </button>
+          <div class="info-section">
+            <button class="info-toggle" onclick="toggleInfo(this)">Show Info</button>
+            <div class="attack-info" style="display: none;">
+              <strong>Attack Vector:</strong><br>
+              `search.php?q=&lt;script&gt;alert(1)&lt;/script&gt;`<br><br>
+              <strong>Description:</strong><br>
+              Injects a script into a parameter to test if it gets executed immediately in the response.
+            </div>
+          </div>
+          <div class="attack-status">Attack has been run</div>
+        </div>
+
+
+      <div class="card">
+        <img src="/photos/forbidden.png "alt="Open Redirect" style="max-width: 250px; max-height: 120px; width: auto; height: auto;">
+        <button class="attack-btn" onclick="runAttack(this, 'https://MRProxy.test/redirect.php?next=http://evil.com', 'Open Redirect')">
+          Open Redirect
+        </button>
+        <div class="info-section">
+          <button class="info-toggle" onclick="toggleInfo(this)">Show Info</button>
+          <div class="attack-info" style="display: none;">
+            <strong>Attack Vector:</strong><br>
+            `https://MRProxy.test/redirect.php?next=http://evil.com`<br><br>
+            <strong>Description:</strong><br>
+            Redirects the user to a malicious site due to unvalidated `next` parameter.
+          </div>
+        </div>
+
+
+  <div class="attack-status">Attack has been run</div>
+</div>
+
+</div>
+
+</div>
+
+    </div>
+  </div>
+
+  <div id="more" class="content">
+    <div class="grid">
+      <div class="card">
+        <img src="/photos/slowloris.png "alt="Slowloris Attack" style="max-width: 250px; max-height: 120px; width: auto; height: auto;">
+        <button onclick="showModal('Slowloris Attack', 'Use the tool \`slowloris\` from your terminal to open many slow HTTP connections. Example: <code>slowloris MRProxy.test -p 443 -s 100 -tc</code>')">Slowloris</button>
+
+        <div class="info-section">
+        <button class="info-toggle" onclick="toggleInfo(this)">Show Info</button>
+        <div class="attack-info" style="display: none;">
+        <strong>Description:</strong><br>
+          The Slowloris attack opens many connections to a server and sends incomplete HTTP headers very slowly.<br><br>
+      <strong>Command:</strong><br>
+      <code>cd slowloris<br>python3 slowloris.py MRProxy.test --https</code><br><br>
+
+      <strong>What it does:</strong><br>
+      - Opens many HTTPS connections to the reverse proxy<br>
+      - Sends incomplete headers, delaying each line<br>
+      - Keeps each connection open indefinitely<br>
+      - Exhausts server resources
+    </div>
+  </div>
+
+  <div class="attack-status">Attack has been run</div>
+</div>
+
+    <div class="card">
+        <img src="/photos/rudy.png "alt="R.U.D.Y Attack" style="max-width: 250px; max-height: 120px; width: auto; height: auto;">
+        <button onclick="showModal('R.U.D.Y Attack (R U Dead Yet)', 'Use the tool `rudy` from your terminal to simulate a HTTP flood attack by sending multiple, low-bandwidth requests to a target. Example: <code>`/rudy run -u https://MRProxy.test -c 5 -i 5s -p 2MB/`</code>')">R.U.D.Y Attack</button>
+
+  <div class="info-section">
+    <button class="info-toggle" onclick="toggleInfo(this)">Show Info</button>
+    <div class="attack-info" style="display: none;">
+      <strong>Description:</strong><br>
+      R.U.D.Y. (R U Dead Yet) is a slow-rate HTTP POST DoS attack that drips the request body very slowly.<br><br>
+
+      <strong>Command:</strong><br>
+      <code>rudy run -u https://MRProxy.test -c 5 -i 5s -p 2MB</code><br><br>
+
+      <strong>What it does:</strong><br>
+      - Opens 5 concurrent HTTP POST requests<br>
+      - Sends 2MB payload slowly (5s per chunk)<br>
+      - Keeps connections alive to exhaust server threads<br>
+      - Low-bandwidth, stealthy DoS technique
+    </div>
+  </div>
+
+  <div class="attack-status">Attack has been run</div>
+</div>
+
+
+
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function showTab(tabId) {
+      document.querySelectorAll('.content').forEach(c => c.classList.remove('active'));
+      document.querySelectorAll('.tab-button').forEach(b => b.classList.remove('active'));
+      document.getElementById(tabId).classList.add('active');
+      event.target.classList.add('active');
+    }
+
+    function runAttack(button, url, label = '', userAgent = 'curl', method = 'GET') {
+      const status = button.parentElement.querySelector('.attack-status');
+      status.innerText = `Running: ${label}`;
+      status.style.display = 'block';
+
+      fetch(url, {
+        method: method,
+        headers: { 'User-Agent': userAgent }
+      }).finally(() => {
+        setTimeout(() => {
+          status.innerText = `Attack has been run`;
+          setTimeout(() => { status.style.display = 'none'; }, 2000);
+        }, 500);
+      });
+    }
+
+    function runFloodAttack(button, url) {
+      const status = button.parentElement.querySelector('.attack-status');
+      status.innerText = 'Running Brute-Force...';
+      status.style.display = 'block';
+      let completed = 0;
+      for (let i = 0; i < 60; i++) {
+        fetch(url).finally(() => {
+          completed++;
+          if (completed === 60) {
+            status.innerText = 'Attack has been run';
+            setTimeout(() => { status.style.display = 'none'; }, 2000);
+          }
+        });
+      }
+    }
+
+function showModal(title, body) {
+  document.getElementById('modal-title').innerText = title;
+  document.getElementById('modal-body').innerHTML = body;
+  document.querySelector('.modal').style.display = 'block';
+  document.querySelector('.overlay').style.display = 'block';
+}
+
+    function closeModal() {
+  document.querySelector('.modal').style.display = 'none';
+  document.querySelector('.overlay').style.display = 'none';
+}
+
+function runBotFloodAttack(button, url) {
+  const status = button.parentElement.querySelector('.attack-status');
+  status.innerText = 'Running Bot Flooding...';
+  status.style.display = 'block';
+
+  const userAgents = [
+    'Googlebot/2.1 (+http://www.google.com/bot.html)',
+    'Bingbot/2.0 (+http://www.bing.com/bingbot.htm)',
+    'Yahoo! Slurp',
+    'DuckDuckBot/1.0; (+http://duckduckgo.com/duckduckbot.html)',
+    'Mozilla/5.0 (compatible; Baiduspider/2.0; +http://www.baidu.com/search/spider.html)'
+  ];
+
+  let completed = 0;
+  const total = 50;
+
+  for (let i = 0; i < total; i++) {
+    const ua = userAgents[i % userAgents.length];
+    fetch(url, { headers: { 'User-Agent': ua } }).finally(() => {
+      completed++;
+      if (completed === total) {
+        status.innerText = 'Bot Flooding completed';
+        setTimeout(() => { status.style.display = 'none'; }, 3000);
+      }
+    });
+  }
+}
+
+function runRateLimitingTest(button, url) {
+  const status = button.parentElement.querySelector('.attack-status');
+  status.innerText = 'Testing Rate Limiting...';
+  status.style.display = 'block';
+
+  let completed = 0;
+  const total = 100;
+
+  for (let i = 0; i < total; i++) {
+    fetch(url).finally(() => {
+      completed++;
+      if (completed === total) {
+        status.innerText = 'Rate Limiting test completed';
+        setTimeout(() => { status.style.display = 'none'; }, 3000);
+      }
+    });
+  }
+}
+
+function performHping3Attack() {
+  fetch('/simulate-hping3-attack', { method: 'POST' })
+    .then(response => response.text())
+    .then(data => {
+      alert('Attack simulation response: ' + data);
+      document.querySelector('.attack-status').textContent = data;
+    })
+    .catch(err => {
+      document.querySelector('.attack-status').textContent = 'Attack failed: ' + err;
+    });
+}
+
+
+    function toggleInfo(button) {
+  const infoDiv = button.parentElement.querySelector('.attack-info');
+  if (infoDiv.style.display === 'none') {
+    infoDiv.style.display = 'block';
+    button.innerText = 'Hide Info';
+  } else {
+    infoDiv.style.display = 'none';
+    button.innerText = 'Show Info';
+  }
+}
+
+
+function runMaliciousBotAttack(button) {
+  const status = button.parentElement.querySelector('.attack-status');
+  status.innerText = 'Running Malicious Bot...';
+  status.style.display = 'block';
+
+  fetch('/simulate-malicious-bot', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      target: 'https://MRProxy.test/',
+      userAgent: 'evilbot'
+    })
+  })
+  .then(res => res.text())
+  .then(res => {
+    status.innerText = 'Malicious Bot attack sent';
+    setTimeout(() => { status.style.display = 'none'; }, 3000);
+  })
+  .catch(err => {
+    status.innerText = 'Failed to run Malicious Bot attack';
+    setTimeout(() => { status.style.display = 'none'; }, 3000);
+  });
+}
+
+
+document.addEventListener("DOMContentLoaded", () => {
+  document.querySelectorAll('.attack-info').forEach(el => {
+    el.style.display = 'none';
+  });
+});
+
+  </script>
+  
+  
+<div class="overlay" onclick="closeModal()"></div>
+<div class="modal" id="modal">
+  <h3 id="modal-title"></h3>
+  <div id="modal-body"></div>
+  <button onclick="closeModal()">Close</button>
+</div>
+
+</body>
+</html>
