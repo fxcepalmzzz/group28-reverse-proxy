@@ -187,23 +187,30 @@
       </div>
       
       <div class="card">
-        <img src="/photos/maliciousbot.png "alt="Malicious Bot" style="max-width: 250px; max-height: 120px; width: auto; height: auto;">
-        <button class="attack-btn" onclick="runAttack(this, 'https://MRProxy.test/', 'Malicious Bot', 'evilbot')">
+        <img src="/photos/maliciousbot.png" alt="Malicious Bot" style="max-width: 250px; max-height: 120px; width: auto; height: auto;">
+        <button onclick="showModal('Malicious Bot', 'Use the following command from your terminal to send a GET request with a malicious User-Agent string. Example: <code>curl -i -A &quot;evilbot&quot; https://MRProxy.test</code>')">
           Malicious Bot
         </button>
 
         <div class="info-section">
           <button class="info-toggle" onclick="toggleInfo(this)">Show Info</button>
           <div class="attack-info" style="display: none;">
-            <strong>User-Agent:</strong><br>
-            `evilbot`<br><br>
             <strong>Description:</strong><br>
-            Sends a GET request using a suspicious User-Agent string (`evilbot`) to test bot detection logic.
+            This test sends a GET request using a suspicious User-Agent string (<code>evilbot</code>) to trigger bot detection logic.<br><br>
+
+            <strong>Command:</strong><br>
+            <code>curl -i -A "evilbot" https://MRProxy.test</code><br><br>
+
+            <strong>What it does:</strong><br>
+            - Sends a request with a malicious User-Agent header<br>
+            - Designed to trigger NGINX bot protection rules<br>
+            - Simulates automated bot scraping or probing activity
           </div>
         </div>
 
         <div class="attack-status">Attack has been run</div>
       </div>
+
 
       
       <div class="card">
